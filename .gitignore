@@ -5,6 +5,11 @@ __pycache__/
 
 # C extensions
 *.so
+._*
+db.sqlite3
+.idea
+*/migrations
+*/._*
 
 # Distribution / packaging
 .Python
