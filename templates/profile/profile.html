@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }} | Profile{% endblock title %}
+
+{% block body %}
+<div class="container mt-5">
+
+    <!-- PROFILE HEADER -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+
+                    <div class="d-flex align-items-center gap-4">
+
+                        <!-- Avatar -->
+                        <div>
+                            {% if user.profile_pic %}
+                            <img
+                                    src="{{ user.profile_pic.url }}"
+                                    alt="Profile picture"
+                                    class="rounded-circle border"
+                                    style="width:120px; height:120px; object-fit:cover;"
+                            >
+                            {% else %}
+                            <div style="
+            width:120px;
+            height:120px;
+            border-radius:50%;
+            background:#dee2e6;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:48px;
+            font-weight:bold;
+            color:#6c757d;
+        ">
+                                {{ user.username|first|upper }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="flex-grow-1">
+                            <h3 class="mb-1">{{ user.username }}</h3>
+                            <p class="text-muted mb-2">{{ fullname }}</p>
+
+                            <div class="d-flex gap-4 mb-3">
+                                <span><strong>0</strong> Posts</span>
+                                <span><strong>0</strong> Followers</span>
+                                <span><strong>0</strong> Following</span>
+                            </div>
+
+                            {% if request.user == user %}
+                            <a href="#" class="btn btn-outline-dark btn-sm">
+                                Edit Profile
+                            </a>
+                            {% else %}
+                            <button class="btn btn-primary btn-sm">
+                                Follow
+                            </button>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- BIO SECTION -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="mb-2">Bio</h5>
+                    <p class="text-muted mb-0">
+                        {% if user.bio %}
+                    <p>{{ user.bio }}</p>
+                    {% else %}
+                    <p class="text-muted">No bio yet.</p>
+                    {% endif %}
+
+                    </p>
+                </div>
+            </div>
+
+            <!-- USER POSTS -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="mb-3">Posts</h5>
+
+                    <p class="text-muted text-center mb-0">
+                        No posts yet.
+                    </p>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock body %}
