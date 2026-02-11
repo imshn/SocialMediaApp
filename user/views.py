@@ -4,9 +4,14 @@ from .forms import RegisterForm, ProfileForm
 from post.models import Post
 
 def profile(request):
-    # print(username)
-    return render(request, 'profile/profile.html', {'fullname': request.user.first_name + ' ' + request.user.last_name})
 
+    allposts = request.user.posts.all().order_by('-created_at')
+    for post in allposts:
+        post.liked_by_user = post.likes.filter(user=request.user).exists()
+    return render(request, 'profile/profile.html', {
+        'fullname': request.user.get_full_name() or request.user.username,
+        'all_posts': allposts
+    })
 def home(request):
     if request.user.is_authenticated:
         allposts = Post.objects.select_related('author').prefetch_related('likes')

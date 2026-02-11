@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 
+from comment.views import add_comment
 from post.views import create_post, likePost
 from user.forms import LoginForm
 from django.urls import path
@@ -41,6 +42,7 @@ urlpatterns = [
     # path('accounts/profile/<str:username>/', profile, name='profile'),
     path('user/create/', create_post, name='create_post'),
     path('user/like/<int:post_id>', likePost, name='like_post'),
+    path('user/comment/<int:post_id>', add_comment, name='comment'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

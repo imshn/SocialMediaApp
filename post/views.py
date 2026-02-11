@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import PostForm
@@ -30,5 +31,11 @@ def likePost(request, post_id):
 
     if not created:
         like.delete()
+        liked = False
+    else:
+        liked = True
 
-    return redirect('home')
+    return JsonResponse({
+        'liked': liked,
+        'like_count': post.likes.count()
+    })
