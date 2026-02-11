@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Edit Profile | {{user.username}} {% endblock title %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+
+                    <h4 class="mb-4 text-center">Edit Profile</h4>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Profile Picture -->
+                        <div class="text-center mb-4">
+
+                            <label for="id_profile_pic" style="cursor:pointer;">
+
+                                {% if request.user.profile_pic %}
+                                <img src="{{ request.user.profile_pic.url }}"
+                                     id="previewImage"
+                                     class="rounded-circle img-thumbnail border shadow-sm"
+                                     style="width:120px; height:120px; object-fit:cover;">
+                                {% else %}
+                                <div id="previewImage"
+                                     class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto shadow-sm"
+                                     style="width:120px; height:120px; font-size:40px;">
+                                    {{ request.user.username|first|upper }}
+                                </div>
+                                {% endif %}
+                            </label>
+
+                            {{ form.profile_pic }}
+
+                        </div>
+
+                        <!-- Username -->
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            {{ form.username }}
+                        </div>
+
+                        <!-- First Name -->
+                        <div class="mb-3">
+                            <label class="form-label">First Name</label>
+                            {{ form.first_name }}
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="mb-3">
+                            <label class="form-label">Last Name</label>
+                            {{ form.last_name }}
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="mb-4">
+                            <label class="form-label">Bio</label>
+                            {{ form.bio }}
+                        </div>
+
+                        <div class="d-grid">
+                            <button class="btn btn-dark btn-lg">
+                                Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("id_profile_pic").addEventListener("change", function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const preview = document.getElementById("previewImage");
+            if (preview.tagName === "IMG") {
+                preview.src = event.target.result;
+            }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    });
+</script>
+{% endblock body %}

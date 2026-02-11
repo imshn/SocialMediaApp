@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}SocialMediaApp{% endblock title %}</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -12,62 +14,237 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
           crossorigin="anonymous"
   >
+  <style>
+    .create-post-wrapper {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+    }
+
+    .image-upload-area {
+      min-height: 350px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-label {
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .form-control {
+      border: none;
+      resize: none;
+      box-shadow: none !important;
+      font-size: 15px;
+    }
+
+    .form-control:focus {
+      box-shadow: none !important;
+    }
+
+    #id_image {
+      display: none;
+    }
+
+
+    /* Hide scrollbar (clean look) */
+    .overflow-auto::-webkit-scrollbar {
+      display: none;
+    }
+    .overflow-auto {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Story gradient ring */
+    .story-ring {
+      padding: 3px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #feda75, #d62976, #962fbf);
+      display: inline-block;
+    }
+
+    /* Story avatar */
+    .story-avatar {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: #dee2e6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    /* Hover effect */
+    .story-item:hover .story-avatar {
+      transform: scale(1.05);
+      transition: 0.2s ease;
+    }
+    .post-action {
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .post-action:hover {
+      transform: scale(1.1);
+    }
+
+    .card {
+      border-radius: 12px;
+    }
+
+  </style>
+
 </head>
 
 <body class="bg-light">
 
 <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary sticky-top py-2">
   <div class="container">
 
-    <a class="navbar-brand fw-bold" href="#">
+    <!-- BRAND -->
+    <a class="navbar-brand fw-bold fs-5 text-white" href="{% url 'home' %}">
       SocialMediaApp
     </a>
 
+    <!-- TOGGLER -->
     <button class="navbar-toggler" type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarMain"
-            aria-controls="navbarMain"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
+            data-bs-target="#navbarMain">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarMain">
 
-      <!-- LEFT LINKS -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Home</a>
-        </li>
-      </ul>
+      {% if user.is_authenticated %}
 
-      <!-- RIGHT AUTH -->
-      <div class="d-flex align-items-center gap-2">
+      <!-- CENTER ICON NAV -->
+      <div class="mx-auto d-flex align-items-center gap-4 fs-5">
 
-        {% if user.is_authenticated %}
-        <span class="text-light me-2">
-                        Hi, <strong>{{ user.username }}</strong>
-                    </span>
+        <a href="{% url 'home' %}" class="nav-icon active-icon">
+          <i class="bi bi-house-door text-white"></i>
+        </a>
+
+        <a href="#" class="nav-icon position-relative">
+          <i class="bi bi-chat-dots text-white"></i>
+          <span class="notif-dot"></span>
+        </a>
+
+        <a href="{% url 'create_post' %}" class="nav-icon">
+          <i class="bi bi-plus-square text-white"></i>
+        </a>
+
+        <a href="#" class="nav-icon">
+          <i class="bi bi-bell text-white"></i>
+        </a>
+
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="d-flex align-items-center gap-3">
+
+        <!-- Profile Avatar -->
+        <a href="{% url 'profile' %}" class="profile-avatar">
+          {% if user.profile_pic %}
+          <img src="{{ user.profile_pic.url }}"
+               class="rounded-circle"
+               style="width:34px;height:34px;object-fit:cover;">
+          {% else %}
+          <div class="avatar-fallback">
+            {{ user.username|first|upper }}
+          </div>
+          {% endif %}
+        </a>
+
+        <!-- Logout -->
         <form method="post" action="{% url 'logout' %}" class="d-inline">
           {% csrf_token %}
-          <button type="submit" class="btn btn-outline-light btn-sm">
+          <button type="submit" class="btn btn-sm btn-outline-light px-3">
             Logout
           </button>
         </form>
-        {% else %}
-        <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">
-          Login
-        </a>
-        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">
-          Register
-        </a>
-        {% endif %}
 
       </div>
+
+      {% else %}
+
+      <div class="ms-auto d-flex gap-2">
+        <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm px-3">
+          Login
+        </a>
+        <a href="{% url 'register' %}" class="btn btn-light btn-sm px-3">
+          Register
+        </a>
+      </div>
+
+      {% endif %}
+
     </div>
   </div>
 </nav>
+
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">-->
+<!--  <div class="container">-->
+
+<!--    <a class="navbar-brand fw-bold" href="#">-->
+<!--      SocialMediaApp-->
+<!--    </a>-->
+
+<!--    <button class="navbar-toggler" type="button"-->
+<!--            data-bs-toggle="collapse"-->
+<!--            data-bs-target="#navbarMain"-->
+<!--            aria-controls="navbarMain"-->
+<!--            aria-expanded="false"-->
+<!--            aria-label="Toggle navigation">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+
+<!--    <div class="collapse navbar-collapse" id="navbarMain">-->
+
+<!--      &lt;!&ndash; LEFT LINKS &ndash;&gt;-->
+<!--      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link active" href="{% url 'home' %}">Home</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link active" href="#">Feed</a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link active" href="#">Messages</a>-->
+<!--        </li>-->
+<!--      </ul>-->
+
+<!--      &lt;!&ndash; RIGHT AUTH &ndash;&gt;-->
+<!--      <div class="d-flex align-items-center gap-2">-->
+
+<!--        {% if user.is_authenticated %}-->
+<!--        <span class="text-light me-2">-->
+<!--                        Hi, <strong>{{ user.username }}</strong>-->
+<!--                    </span>-->
+<!--        <form method="post" action="{% url 'logout' %}" class="d-inline">-->
+<!--          {% csrf_token %}-->
+<!--          <button type="submit" class="btn btn-outline-light btn-sm">-->
+<!--            Logout-->
+<!--          </button>-->
+<!--        </form>-->
+<!--        {% else %}-->
+<!--        <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">-->
+<!--          Login-->
+<!--        </a>-->
+<!--        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">-->
+<!--          Register-->
+<!--        </a>-->
+<!--        {% endif %}-->
+
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</nav>-->
 
 <!-- PAGE CONTENT -->
 <main class="container my-4">

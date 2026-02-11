@@ -38,4 +38,13 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'post')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_user_post_like'
+            )
+        ]
+        indexes = [
+            models.Index(fields=['post']),
+            models.Index(fields=['user']),
+        ]

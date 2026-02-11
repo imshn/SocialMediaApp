@@ -16,14 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+
+from post.views import create_post, likePost
 from user.forms import LoginForm
 from django.urls import path
-from user.views import register, home, profile
+from user.views import register, home, profile, edit_profile
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home, name='home'),
+    path('', home, name='home'),
     path("user/register/", register, name='register'),
     path(
         'user/login/',
@@ -35,7 +37,10 @@ urlpatterns = [
     ),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('accounts/profile/', profile, name='profile'),
-    path('accounts/profile/<str:username>/', profile, name='profile'),
+    path('user/edit_profile/', edit_profile, name='edit_profile'),
+    # path('accounts/profile/<str:username>/', profile, name='profile'),
+    path('user/create/', create_post, name='create_post'),
+    path('user/like/<int:post_id>', likePost, name='like_post'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

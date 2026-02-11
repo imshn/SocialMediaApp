@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Create Post{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+
+      <div class="create-post-wrapper bg-white border rounded-3">
+
+        <!-- Header -->
+        <div class="border-bottom px-4 py-3 text-center position-relative">
+          <h6 class="mb-0 fw-semibold">Create New Post</h6>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- Image Preview Section -->
+          <div class="image-upload-area text-center border-bottom position-relative">
+
+            <label for="id_image" class="w-100 h-100 d-flex flex-column justify-content-center align-items-center upload-label">
+
+              <div id="uploadPlaceholder" class="text-muted">
+                <i class="bi bi-image fs-1"></i>
+                <p class="mt-2 mb-0">Select photo to share</p>
+              </div>
+
+              <img id="imagePreview"
+                   class="img-fluid d-none"
+                   style="max-height:400px; object-fit:cover;">
+
+            </label>
+
+            {{ form.image }}
+
+          </div>
+
+          <!-- Caption Section -->
+          <div class="p-4">
+
+            <div class="d-flex gap-3 align-items-start">
+
+              <!-- Avatar -->
+              <div class="rounded-circle bg-secondary"
+                   style="width:38px;height:38px;"></div>
+
+              <!-- Caption -->
+              <div class="flex-grow-1">
+                {{ form.caption }}
+              </div>
+
+            </div>
+
+            <!-- Submit -->
+            <div class="text-end mt-4">
+              <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                Share
+              </button>
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById("id_image").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = function(event){
+        const preview = document.getElementById("imagePreview");
+        preview.src = event.target.result;
+        preview.classList.remove("d-none");
+        document.getElementById("uploadPlaceholder").classList.add("d-none");
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+
+{% endblock %}
